@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Response, Cookie, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 import bcrypt
@@ -6,27 +7,40 @@ import uuid
 from uuid import UUID
 from Database import Database
 
+# Initialize the FastAPI application
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Request Models
 class RegisterRequest(BaseModel):
+    """Pydantic model for user registration request data."""
     email: EmailStr
     password: str
     role: str = "user"
 
 
 class LoginRequest(BaseModel):
+    """Pydantic model for user login request data."""
     email: EmailStr
     password: str
 
 
 # Response Models
 class UserResponse(BaseModel):
+    """Pydantic model for returning basic user information."""
     id: UUID
     email: str
 
 
 class LoginResponse(BaseModel):
+    """Pydantic model for successful login response, including session details."""
     message: str
     user: dict
     sessionId: str
@@ -34,18 +48,35 @@ class LoginResponse(BaseModel):
 
 # Helper Functions
 def hash_password(password: str) -> str:
-    """Hash password using bcrypt"""
+    """
+    Hashes the given plaintext password using bcrypt.
+    
+    :param password: The plaintext password string.
+    :return: The hashed password string.
+    """
     salt = bcrypt.gensalt()
     return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
 
 
 def verify_password(password: str, password_hash: str) -> bool:
-    """Verify password against hash"""
+    """
+    Verifies a plaintext password against a stored bcrypt hash.
+    
+    :param password: The plaintext password string.
+    :param password_hash: The stored hashed password string.
+    :return: True if the passwords match, False otherwise.
+    """
     return bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8'))
 
 
 def get_user_from_session(session_id: Optional[str]) -> Optional[dict]:
-    """Get user from session ID"""
+    """
+    Retrieves user information from the database using the session ID.
+    Performs a JOIN between the 'session' and 'users' tables.
+    
+    :param session_id: The unique ID of the session.
+    :return: A dictionary containing user 'id' and 'email' or None if the session is invalid.
+    """
     if not session_id:
         return None
     
@@ -63,13 +94,21 @@ def get_user_from_session(session_id: Optional[str]) -> Optional[dict]:
                 return {"id": result[0], "email": result[1]}
             return None
     except Exception:
+        # Log the error here in a real application
         return None
 
 
 def get_current_user(session_id: Optional[str] = Cookie(None, alias="session_id")):
-    """Dependency to get current user from cookie"""
+    """
+    FastAPI dependency function to authenticate the user based on the 'session_id' cookie.
+    
+    :param session_id: Automatically extracted from the "session_id" cookie.
+    :raises HTTPException 401: If the session ID is missing or invalid.
+    :return: A dictionary containing the authenticated user's id and email.
+    """
     user = get_user_from_session(session_id)
     if not user:
+        # Raise 401 if no valid user is found for the session
         raise HTTPException(status_code=401, detail="unauthorized")
     return user
 
@@ -77,10 +116,16 @@ def get_current_user(session_id: Optional[str] = Cookie(None, alias="session_id"
 # Routes
 @app.post("/register")
 async def register(data: RegisterRequest):
-    """Register a new user"""
+    """
+    Registers a new user: hashes the password and inserts a new row into the 'users' table.
+    
+    :param data: The request body containing email, password, and role.
+    :raises HTTPException 400: If the email already exists (duplicate key error).
+    """
     try:
         password_hash = hash_password(data.password)
         
+        # Insert user data and commit the transaction
         with Database.get_cursor(commit=True) as cursor:
             cursor.execute("""
                 INSERT INTO users (email, password_hash, role) 
@@ -90,6 +135,7 @@ async def register(data: RegisterRequest):
         return {"message": "registered", "email": data.email, "role": data.role}
     
     except Exception as e:
+        # Check for PostgreSQL duplicate key error
         if "duplicate key" in str(e).lower():
             raise HTTPException(status_code=400, detail="email_already_exists")
         raise HTTPException(status_code=500, detail=str(e))
@@ -101,15 +147,22 @@ async def login(
     response: Response,
     session_id: Optional[str] = Cookie(None, alias="session_id")
 ):
-    """Login user and create session"""
+    """
+    Handles user login: verifies credentials, creates or reuses a session, and sets the 'session_id' cookie.
+    
+    :param data: The request body containing email and password.
+    :param response: The FastAPI Response object to set the cookie.
+    :param session_id: Optional existing session ID from the cookie.
+    :raises HTTPException 401: If credentials are invalid.
+    """
     try:
-        # Check if user already has a valid session
+        # Check if user already has a valid session from the cookie
         if session_id:
             existing_user = get_user_from_session(session_id)
             if existing_user:
-                # User already logged in with valid session
+                # User already logged in, return existing session info
                 return {
-                    "message": "ok",
+                    "message": "loggedIn",
                     "user": {
                         "id": existing_user["id"],
                         "email": existing_user["email"]
@@ -117,7 +170,7 @@ async def login(
                     "sessionId": session_id
                 }
         
-        # Get user from database
+        # 1. Get user from database
         with Database.get_cursor() as cursor:
             cursor.execute("""
                 SELECT id, email, password_hash, role 
@@ -126,13 +179,13 @@ async def login(
             """, (data.email,))
             user = cursor.fetchone()
         
-        # Verify credentials
+        # 2. Verify credentials
         if not user or not verify_password(data.password, user[2]):
             raise HTTPException(status_code=401, detail="invalid_credentials")
         
         user_id, email, _, role = user
         
-        # Check if user already has an active session
+        # 3. Check for active session
         with Database.get_cursor() as cursor:
             cursor.execute("""
                 SELECT id FROM session 
@@ -142,10 +195,10 @@ async def login(
             existing_session = cursor.fetchone()
         
         if existing_session:
-            # Reuse existing session
+            # Reuse existing session ID
             session_id = existing_session[0]
         else:
-            # Create new session
+            # Create new session and insert into 'session' table
             session_id = str(uuid.uuid4())
             
             with Database.get_cursor(commit=True) as cursor:
@@ -154,14 +207,14 @@ async def login(
                     VALUES (%s, %s)
                 """, (session_id, user_id))
         
-        # Set cookie
+        # 4. Set the session cookie on the client
         response.set_cookie(
             key="session_id",
             value=session_id,
-            max_age=86400,  # 24 hours
-            httponly=True,
-            samesite="strict",
-            secure=False  # Set to True in production with HTTPS
+            max_age=86400,  # 24 hours in seconds
+            httponly=True,  # Prevents client-side JS access
+            samesite="none",
+            secure=False    # Set to True in production with HTTPS
         )
         
         return {
@@ -176,12 +229,18 @@ async def login(
     except HTTPException:
         raise
     except Exception as e:
+        # Catch other database or unexpected errors
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/me", response_model=UserResponse)
 async def me(current_user: dict = Depends(get_current_user)):
-    """Get current user information"""
+    """
+    Protected endpoint to retrieve the current authenticated user's details.
+    
+    :param current_user: The authenticated user dictionary provided by the Depends(get_current_user).
+    :return: The user ID and email.
+    """
     return current_user
 
 
@@ -190,15 +249,21 @@ async def logout(
     response: Response,
     session_id: Optional[str] = Cookie(None, alias="session_id")
 ):
-    """Logout user and delete session"""
+    """
+    Logs out the user by deleting the session from the database and clearing the client-side cookie.
+    
+    :param response: The FastAPI Response object to clear the cookie.
+    :param session_id: Optional existing session ID from the cookie.
+    """
     if not session_id:
         return {"message": "logged_out"}
     
     try:
+        # Delete the session from the database
         with Database.get_cursor(commit=True) as cursor:
             cursor.execute("DELETE FROM session WHERE id = %s", (session_id,))
         
-        # Clear cookie
+        # Clear the client-side cookie by setting max_age to 0
         response.delete_cookie(key="session_id")
         
         return {"message": "logged_out"}
@@ -209,4 +274,5 @@ async def logout(
 
 if __name__ == "__main__":
     import uvicorn
+    # Run the application using uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
