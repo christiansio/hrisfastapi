@@ -1,9 +1,12 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+
+"""
+Database utility module.
+This module provides database connection management and operations.
+It should NOT contain any FastAPI application or routes.
+"""
 
 import psycopg2
 from psycopg2 import pool
-from contextlib import asynccontextmanager
 from contextlib import contextmanager
 from dotenv import load_dotenv
 import os
@@ -11,22 +14,6 @@ import os
 # Load .env file
 load_dotenv()
 
-# Initialize the FastAPI application
-app = FastAPI()
-
-# Define allowed origins for CORS
-origins = [
-    "http://localhost:5173",
-]
-
-# Add CORS middleware to allow cross-origin requests from the specified frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,          # Required if using cookies/sessions
-    allow_methods=["*"],             # Allow all HTTP methods
-    allow_headers=["*"],             # Allow all headers
-)
 
 class Database:
     """
@@ -94,47 +81,12 @@ class Database:
             finally:
                 cursor.close()
 
-
-# Example usage in a FastAPI route
-@app.get("/")
-async def root():
-    """Returns a simple welcome message for the root endpoint."""
-    return {"message": "FastAPI with PostgreSQL"}
-
-
-@app.get("/test-db")
-async def test_database():
-    """
-    Tests the database connection by executing a simple query (SELECT version()).
-    Returns the database version or an error message.
-    """
-    try:
-        # Use the context manager to automatically handle connection and cursor
-        with Database.get_cursor() as cursor:
-            cursor.execute("SELECT version();")
-            version = cursor.fetchone()
-            return {"status": "success", "database_version": version[0]}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
-
-
-# Optional: Close pool on shutdown
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """
-    A lifespan context manager to handle application startup and shutdown events.
-    It ensures the database connection pool is closed when the application shuts down.
-    """
-    # Startup: Could initialize database pool here if needed
-    yield
-    # Shutdown: Close database pool
-    if Database._connection_pool:
-        Database._connection_pool.closeall()
-
-# Set the lifespan context manager for the application
-app.router.lifespan_context = lifespan
-
-if __name__ == "__main__":
-    import uvicorn
-    # Run the application using uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    @classmethod
+    def close_pool(cls):
+        """
+        Closes all connections in the pool.
+        This should be called during application shutdown.
+        """
+        if cls._connection_pool:
+            cls._connection_pool.closeall()
+            print("Database connection pool closed")

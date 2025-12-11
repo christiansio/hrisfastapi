@@ -1,22 +1,17 @@
-from fastapi import FastAPI, Response, Cookie, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
+
+
+from fastapi import APIRouter, Response, Cookie, HTTPException, Depends, status
 from pydantic import BaseModel, EmailStr
+
+
 from typing import Optional
+from Database import Database
+
 import bcrypt
 import uuid 
 from uuid import UUID
-from Database import Database
 
-# Initialize the FastAPI application
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+auth_router = APIRouter()
 
 # Request Models
 class RegisterRequest(BaseModel):
@@ -83,7 +78,7 @@ def get_user_from_session(session_id: Optional[str]) -> Optional[dict]:
     try:
         with Database.get_cursor() as cursor:
             cursor.execute("""
-                SELECT users.id, users.email 
+                SELECT users.id, users.email, users.role 
                 FROM session 
                 JOIN users ON session.user_id = users.id 
                 WHERE session.id = %s
@@ -91,7 +86,7 @@ def get_user_from_session(session_id: Optional[str]) -> Optional[dict]:
             result = cursor.fetchone()
             
             if result:
-                return {"id": result[0], "email": result[1]}
+                return {"id": result[0], "email": result[1], "role": result[2]}
             return None
     except Exception:
         # Log the error here in a real application
@@ -114,7 +109,7 @@ def get_current_user(session_id: Optional[str] = Cookie(None, alias="session_id"
 
 
 # Routes
-@app.post("/register")
+@auth_router.post("/register")
 async def register(data: RegisterRequest):
     """
     Registers a new user: hashes the password and inserts a new row into the 'users' table.
@@ -141,7 +136,7 @@ async def register(data: RegisterRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/login", response_model=LoginResponse)
+@auth_router.post("/login", response_model=LoginResponse)
 async def login(
     data: LoginRequest, 
     response: Response,
@@ -221,7 +216,8 @@ async def login(
             "message": "ok",
             "user": {
                 "id": user_id,
-                "email": email
+                "email": email,
+                "role": role
             },
             "sessionId": session_id
         }
@@ -233,7 +229,7 @@ async def login(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/me", response_model=UserResponse)
+@auth_router.get("/me", response_model=UserResponse)
 async def me(current_user: dict = Depends(get_current_user)):
     """
     Protected endpoint to retrieve the current authenticated user's details.
@@ -244,7 +240,7 @@ async def me(current_user: dict = Depends(get_current_user)):
     return current_user
 
 
-@app.post("/logout")
+@auth_router.post("/logout")
 async def logout(
     response: Response,
     session_id: Optional[str] = Cookie(None, alias="session_id")
@@ -270,9 +266,3 @@ async def logout(
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-if __name__ == "__main__":
-    import uvicorn
-    # Run the application using uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)

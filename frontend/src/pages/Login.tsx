@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // 1. Define the type for the request body (Frontend model matching FastAPI's LoginRequest)
 interface LoginRequestBody {
@@ -22,6 +23,8 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const navigate = useNavigate();
+
     // 3. Handle Form Submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
@@ -32,7 +35,7 @@ const Login: React.FC = () => {
 
         try {
             // 4. Send the POST Request
-            const res = await fetch("http://localhost:8000/login", {
+            const res = await fetch("http://localhost:8000/auth/login", {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json" 
@@ -56,8 +59,9 @@ const Login: React.FC = () => {
             const successData = data as LoginSuccessResponse;
             console.log("Login successful! Session ID:", successData.sessionId);
             
-            // Success logic: redirect user, update global state, etc.
-            alert(`Welcome, ${successData.user.email}!`);
+            // // Success logic: redirect user, update global state, etc.
+            // alert(`Welcome, ${successData.user.email}!`);
+            navigate('/dashboard');
 
         } catch (error) {
             console.error("Login error:", error);
@@ -82,7 +86,7 @@ const Login: React.FC = () => {
                 eiusmod tempor
                 </p>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
                 <label htmlFor="email" className="text-left">Email</label>
                 <input className="py-2 px-3 border border-gray-400 rounded-md" id="email"
                 type="email" 
@@ -101,7 +105,7 @@ const Login: React.FC = () => {
                 required
                 disabled={loading}/>
 
-                <button className="py-2 px-3 bg-gray-500 rounded-md mt-2" type="submit" disabled={loading}>
+                <button className="py-2 px-3 bg-gray-500 rounded-md mt-2 cursor-pointer" type="submit" disabled={loading}>
                 {loading ? 'Logging In...' : 'Log In'}</button>
             </form>
             </div>
