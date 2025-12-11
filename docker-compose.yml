@@ -1,0 +1,77 @@
+
+services:
+  # PostgreSQL Database Service
+  db:
+    image: postgres:15-alpine
+    container_name: app_postgres
+    environment:
+      # PostgreSQL configuration
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: hris
+    volumes:
+      # Persist database data in a named volume
+      - postgres_data:/var/lib/postgresql/data
+      # Initialize database with custom script
+      - ./db:/docker-entrypoint-initdb.d
+    ports:
+      # Expose PostgreSQL port (optional, for external access)
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  # FastAPI Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: app_backend
+    environment:
+      # Database connection string
+      # Format: postgresql://user:password@host:port/database
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: hris
+      DB_USER: postgres
+      DB_PASS: 1234
+    ports:
+      # Map container port 8000 to host port 8000
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # React Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: app_frontend
+    environment:
+      # Backend API URL for frontend to connect to backend
+      VITE_API_URL: http://localhost:8000
+    ports:
+      # Map container port 5173 to host port 5173
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - app_network
+    restart: unless-stopped
+
+# Named volume for PostgreSQL data persistence
+volumes:
+  postgres_data:
+
+# Custom network for service communication
+networks:
+  app_network:
+    driver: bridge
