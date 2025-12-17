@@ -1,71 +1,71 @@
- A) Clean directory tree
+### A) Clean Directory Tree
+```
+hrisFastApi/
+├── backend/
+│   ├── AuthController.py
+│   ├── backend_analysis.md
+│   ├── Database.py
+│   ├── Dockerfile
+│   ├── main.py
+│   └── requirements.txt
+├── db/
+│   └── 01_init.sql
+├── frontend/
+│   ├── Dockerfile
+│   ├── generate-env.sh
+│   ├── index.html
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── README.md
+│   ├── src/
+│   │   ├── App.css
+│   │   ├── App.tsx
+│   │   ├── config/
+│   │   │   └── api.ts
+│   │   ├── index.css
+│   │   ├── main.tsx
+│   │   └── pages/
+│   │       ├── Dashboard.tsx
+│   │       └── Login.tsx
+│   └── vite.config.ts
+└── docker-compose.yml
+```
 
-    1 /
-    2 |-- AuthController.py
-    3 |-- backend_analysis.md
-    4 |-- Database.py
-    5 |-- main.py
-    6 |-- requirements.txt
-    7 `-- __pycache__/
-    8     |-- AuthController.cpython-313.pyc
-    9     |-- Database.cpython-313.pyc
-   10     `-- main.cpython-313.pyc
+### B) Explanation of All Relevant Files
 
-  B) Explanation of all relevant files
+| Path                      | Description                                                                                                                              |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `docker-compose.yml`      | **Framework Indicator & Config:** Docker Compose file to orchestrate the `db`, `backend`, and `frontend` services.                        |
+| `backend/main.py`         | **Entry Point:** The main entry point for the FastAPI backend application. It initializes the app, middleware, and includes the auth router. |
+| `backend/requirements.txt`| **Config:** Lists the Python dependencies required for the backend service (e.g., `fastapi`, `uvicorn`, `psycopg2-binary`).               |
+| `backend/Dockerfile`      | **Config:** Defines the Docker image for the Python/FastAPI backend service.                                                             |
+| `db/01_init.sql`          | **Config:** SQL script used to initialize the PostgreSQL database schema and potentially seed initial data.                                |
+| `frontend/package.json`   | **Framework Indicator & Config:** Defines the Node.js project, including scripts for development (`dev`), building (`build`), and serving. Indicates a React/Vite project. |
+| `frontend/vite.config.ts` | **Framework Indicator & Config:** Configuration file for Vite, the build tool used for the frontend, confirming a Vite-based setup.     |
+| `frontend/index.html`     | **Entry Point:** The main HTML template and entry point for the React frontend application.                                                |
+| `frontend/src/main.tsx`   | **Entry Point:** The main TypeScript React (TSX) file that bootstraps the React application.                                               |
+| `frontend/Dockerfile`     | **Config:** A multi-stage Dockerfile that first builds the React application and then serves the static `dist` folder.                    |
 
-   * `main.py`:
-       * Type: Entry Point
-       * Purpose: The primary entry point of the application. It initializes the FastAPI application, includes the
-         authentication router, and defines the root endpoint. It is run using an ASGI server like Uvicorn.
+### C) Extracted Dockerfile Requirements
 
-   * `AuthController.py`:
-       * Type: Application Logic
-       * Purpose: Contains the business logic and API routes for handling user authentication, including login and
-         registration endpoints. It uses the database session for user management.
+#### **Frontend (React + Vite)**
+- **Entry Point:** `src/main.tsx` (via `index.html`)
+- **Installation Steps:** `npm install`
+- **Build Steps:** `npm run build` (which executes `tsc -b && vite build`)
+- **Run Command:** `npm run serve` (which executes `serve -s dist -l 5173`)
+- **Exposed Ports:** `5173`
+- **Dependencies:** `react`, `react-dom`, `vite`, `serve`, `typescript`
+- **Environment Variables:** `VITE_API_URL=http://localhost:8000`
 
-   * `Database.py`:
-       * Type: Database
-       * Purpose: Manages the database connection using SQLAlchemy. It defines the database engine, creates the
-         declarative_base, and provides a session for use across the application.
-
-   * `requirements.txt`:
-       * Type: Config
-       * Purpose: Lists the Python libraries required for the project to run, such as fastapi, uvicorn, SQLAlchemy, and
-         pydantic. These are installed using pip.
-
-   * `backend_analysis.md`:
-       * Type: Documentation
-       * Purpose: A markdown file containing an auto-generated analysis of the project's structure, endpoints, and
-         dependencies.
-
-   * `__pycache__/`:
-       * Type: Build Artifact
-       * Purpose: A directory containing Python's cached bytecode. It is generated automatically by the Python
-         interpreter to speed up subsequent executions. It is not needed in a production build.
-
-
-
-  C) Extracted Dockerfile requirements
-
-   * Frontend Entry Point: None detected.
-   * Backend Entry Point: main.py (specifically the app object within it).
-   * Installation Steps:
-       1. Install Python 3.9.
-       2. Copy the requirements.txt file into the container.
-       3. Run pip install --no-cache-dir --upgrade -r requirements.txt to install dependencies.
-   * Build Steps: No explicit build steps are required for this Python project.
-   * Run Commands:
-       * The application is started with uvicorn main:app --host 0.0.0.0 --port 8000.
-   * Exposed Ports:
-       * 8000 must be exposed for the backend API.
-   * Environment Variables: No explicit environment variables are defined in the code, but a production setup would
-     typically require them for database credentials, secrets, etc.
-   * Dependencies:
-       * python:3.9-slim (as a base image)
-       * pip (for installing dependencies)
-       * Dependencies from requirements.txt: fastapi, uvicorn[standard], SQLAlchemy, pydantic,
-         python-jose[cryptography], passlib[bcrypt], python-multipart.
-   * Caveats or Required Volumes:
-       * The command uvicorn main:app --reload is intended for development with hot-reloading. For a production Docker
-         image, the --reload flag should be removed.
-       * The entire application directory (.) should be copied into the container (e.g., into /code).
+#### **Backend (FastAPI)**
+- **Entry Point:** `main.py` (specifically the `app` object)
+- **Installation Steps:** `pip install -r requirements.txt`
+- **Run Command:** `uvicorn main:app --host 0.0.0.0 --port 8000`
+- **Exposed Ports:** `8000`
+- **Dependencies:** `fastapi`, `uvicorn`, `psycopg2-binary`, `python-dotenv`
+- **Environment Variables:**
+  - `DB_HOST=db`
+  - `DB_PORT=5432`
+  - `DB_NAME=hris`
+  - `DB_USER=postgres`
+  - `DB_PASS=1234`
