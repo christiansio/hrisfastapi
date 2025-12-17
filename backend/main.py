@@ -42,7 +42,7 @@ app = FastAPI(
 )
 
 # Your frontend URL
-origins = "http://localhost:5173"
+origins = ["http://localhost:5173","http://8.212.177.238:5173"]
 
 # Configure CORS middleware (moved from AuthController.py)
 app.add_middleware(

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config/api';
+
+
 
 // 1. Define the type for the request body (Frontend model matching FastAPI's LoginRequest)
 interface LoginRequestBody {
@@ -35,7 +38,7 @@ const Login: React.FC = () => {
 
         try {
             // 4. Send the POST Request
-            const res = await fetch("http://localhost:8000/auth/login", {
+            const res = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json" 

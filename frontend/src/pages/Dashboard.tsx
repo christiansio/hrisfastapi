@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, NotepadText, Settings, Bell, BellDot, ChevronDown, User } from 'lucide-react';
+import { LayoutDashboard, NotepadText, Settings, Bell, ChevronDown, User } from 'lucide-react';
 
 
 const Dashboard: React.FC = () =>
