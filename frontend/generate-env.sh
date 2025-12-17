@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # generate-env.sh
 
 # Get local IP

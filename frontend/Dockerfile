@@ -30,6 +30,15 @@ RUN npm install --production
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
 
+# Copy the script from your host to the container
+COPY generate-env.sh /app/generate-env.sh
+
+# Make it Executable
+RUN chmod +x /app/generate-env.sh
+
+# generate env with the URL
+RUN /app/generate-env.sh
+
 EXPOSE 5173
 
 # Use npm script instead of global serve
