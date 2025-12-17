@@ -2,7 +2,7 @@
 # generate-env.sh
 
 # Get local IP
-LOCAL_IP=$(hostname -I | awk '{print $1}')
+LOCAL_IP=$(curl -s ifconfig.me)
 
 # Create .env file
 cat > .env << EOF

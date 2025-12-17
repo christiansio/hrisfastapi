@@ -1,5 +1,5 @@
-const API_HOST ="8.212.177.238";
-const API_PORT =8000;
+const API_HOST =import.meta.env.VITE_API_HOST;
+const API_PORT =import.meta.env.VITE_API_PORT;
 
 if (!API_HOST || !API_PORT)
 {
