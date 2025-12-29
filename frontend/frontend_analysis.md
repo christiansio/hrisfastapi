@@ -18,7 +18,6 @@ C:/Users/Christian Sio/Projects/hrisFastApi/frontend/
 ├── tsconfig.json
 ├── tsconfig.node.json
 ├── vite.config.ts
-├── dist/
 ├── node_modules/
 ├── public/
 │   └── vite.svg

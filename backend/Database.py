@@ -14,7 +14,6 @@ import os
 # Load .env file
 load_dotenv()
 
-
 class Database:
     """
     A class to manage PostgreSQL database connections using a connection pool

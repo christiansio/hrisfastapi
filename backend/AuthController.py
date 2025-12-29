@@ -10,6 +10,7 @@ from Database import Database
 import bcrypt
 import uuid 
 from uuid import UUID
+from typing import Literal
 
 auth_router = APIRouter()
 
@@ -32,6 +33,7 @@ class UserResponse(BaseModel):
     """Pydantic model for returning basic user information."""
     id: UUID
     email: str
+    role: Literal['admin', 'approver', 'user'] = "user"
 
 
 class LoginResponse(BaseModel):
@@ -86,7 +88,12 @@ def get_user_from_session(session_id: Optional[str]) -> Optional[dict]:
             result = cursor.fetchone()
             
             if result:
-                return {"id": result[0], "email": result[1], "role": result[2]}
+                return {
+                        "id": result[0],
+                        "email": result[1],
+                        "role" : result[2]
+                    }
+            
             return None
     except Exception:
         # Log the error here in a real application
@@ -208,7 +215,7 @@ async def login(
             value=session_id,
             max_age=86400,  # 24 hours in seconds
             httponly=True,  # Prevents client-side JS access
-            samesite="none",
+            samesite="lax",
             secure=False    # Set to True in production with HTTPS
         )
         

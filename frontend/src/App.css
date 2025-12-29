@@ -6,7 +6,11 @@
   }
 
   .card {
-    @apply bg-white rounded-md shadow-md;
+    @apply bg-white rounded-lg shadow-sm;
+  }
+
+  .card-header {
+    @apply text-slate-600 text-xl font-medium;
   }
 
   .gradient-orange {
@@ -14,17 +18,21 @@
   }
 
   .btn-bg-white {
-    @apply p-2 rounded-md hover:bg-orange-50 hover:text-[#f05a28] transition-all duration-150 cursor-pointer
+    @apply p-2 rounded-lg hover:text-[#f05a28] transition-all duration-150 cursor-pointer
+  }
+
+  .btn-orange {
+    @apply bg-[#f05a28] font-medium text-white hover:bg-orange-500/80 transition-all duration-100 rounded-lg shadow-md cursor-pointer
   }
 
   .btn-sidebar {
-    @apply h-12 w-16 py-2 px-2 text-white hover:bg-white/10 rounded-md cursor-pointer;
+    @apply h-12 w-12 p-3 text-white hover:bg-white/10 rounded-lg cursor-pointer;
 
     &:hover {
-      @apply bg-white/10 transition-all duration-150;
+      @apply bg-white/10;
 
       .btn-icon-sidebar {
-        @apply scale-110 transition-all duration-150;
+        @apply scale-110;
       }
     }
   }
@@ -34,13 +42,32 @@
   }
 
   .section-header {
-    @apply text-4xl font-medium text-slate-600
+    @apply text-3xl font-medium text-slate-600
   }
 
   .section-subheader {
     @apply text-slate-400
   }
+
+  .section-header-tabs {
+    @apply text-sm text-slate-400 font-extralight h-full w-24 items-end hover:text-slate-600 focus:border-b-3 focus:text-[#f05a28] focus:font-bold transition-all duration-150 cursor-pointer
+  }
 }
+
+.th-space {
+  @apply px-4 py-2
+}
+
+.tb-space {
+  @apply px-6 py-2
+}
+
+.dash-tr {
+  @apply border-b border-slate-300/40 hover:bg-slate-200/10
+}
+
+
+
 
 /* #root {
   max-width: 1280px;

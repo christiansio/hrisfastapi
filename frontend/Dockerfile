@@ -24,13 +24,15 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy package files and install only production dependencies
+# 'serve' is a dependency needed to run the app
 COPY package*.json ./
-RUN npm install --production
+RUN npm install --omit=dev
 
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
 
+# Expose the port the app runs on
 EXPOSE 5173
 
-# Use npm script instead of global serve
+# Use the 'serve' script from package.json to start the server
 CMD ["npm", "run", "serve"]
