@@ -11,6 +11,7 @@
     "serve": "serve -s dist -l 5173"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "framer-motion": "^12.23.26",
     "lucide-react": "^0.561.0",
     "react": "^19.2.0",

@@ -45,9 +45,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 setIsLoading(false); // Stop showing the loading screen
             }
 
+
         };
 
+        // Initial check on mount
         verifySession();
+
+        // Define the listener handler
+        const handlePopState = () => {
+            verifySession();
+        };
+        
+        // Listen for Back/Forward navigation
+        window.addEventListener("popstate", handlePopState);
+
+        // Cleanup to prevent memory leaks and duplicate requests
+        return () => {
+            window.removeEventListener("popstate", handlePopState);
+        };
+
     }, []);
 
     if (isLoading) {
