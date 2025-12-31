@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import { LoaderCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
+
 import { motion, AnimatePresence } from "framer-motion";
 
 import logo from '@/assets/logo.png';
 import loginImg from '@/assets/loginImg.png';
  
 const Login: React.FC = () => {
-
     // State to hold input values
     const { login } = useAuth();
+
+    const location = useLocation();
+
+    const from = location.state?.from?.pathname || "/";
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-
-    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
@@ -24,7 +27,7 @@ const Login: React.FC = () => {
 
         try {
             await login(email, password);
-            navigate('/');
+            navigate(from, { replace: true }); // kill login history
         } catch (error: any) {
             console.error("Login error:", error);
             alert(error.message || "Invalid Credentials");

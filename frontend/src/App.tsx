@@ -5,14 +5,22 @@ import DashboardPage from "@/pages/DashboardPage";
 import RequestsPage from "@/pages/RequestsPage";
 import AppPage from "@/pages/AppPage";
 import Login from "@/pages/Login";
+import AuthRedirectRoute from '@/auth/AuthRedirectRoute';
 import './App.css'
 
 const App = () => {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        
+        {/* Public but not guarded  */}
+        <Route 
+          path="/login" 
+          element={
+            <AuthRedirectRoute>
+              <Login />
+            </ AuthRedirectRoute>} 
+          />
+        {/* Protected */}
         <Route element={<ProtectedRoute />}>
         <Route element={<AppPage />}>
           <Route index element={<DashboardPage />} />
