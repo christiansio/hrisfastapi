@@ -9,14 +9,14 @@ import {CircleQuestionMark, MoveUpRightIcon, CircleCheckBigIcon, CircleSlash2, L
 const ClockedInStatus = ( { isClockedIn, onToggle } : { isClockedIn : boolean, onToggle: () => void } ) => {
 
     const clockInOutModal = useRef<HTMLDialogElement>(null);
-    const [isOpen, setIsOpen] = useState(false);
+    
 
     const openModal = () => {
-        setIsOpen(true);
+        
         clockInOutModal.current?.showModal();
     } 
     const closeModal = () => {
-        setIsOpen(false);
+        
         clockInOutModal.current?.close();
     }
 
@@ -32,7 +32,6 @@ const ClockedInStatus = ( { isClockedIn, onToggle } : { isClockedIn : boolean, o
 
     const handleConfirm = () => {
         onToggle(); // Changes Status
-        setIsOpen(false);
         closeModal();
     }
 
@@ -261,9 +260,11 @@ const DashboardSection: React.FC = () => {
                 <table className="table-fixed w-full">
 
                     <thead className="text-left text-sm text-slate-600/80 bg-slate-200/40">
-                        <th className="th-space">Type</th>
-                        <th className="th-space">Date</th>
-                        <th className="th-space">Reason</th>
+                        <tr>
+                            <th className="th-space">Type</th>
+                            <th className="th-space">Date</th>
+                            <th className="th-space">Reason</th>
+                        </tr>
                     </thead>
                 </table>
 
@@ -323,9 +324,12 @@ const DashboardSection: React.FC = () => {
                 
                 <table className="table-fixed w-full">
                     <thead className="text-left text-sm text-slate-600/80 bg-slate-200/40">
+                    <tr>
                         <th className="th-space">Date</th>
                         <th className="th-space">Clock-In</th>
                         <th className="th-space">Clock-Out</th>
+                    </tr>
+                        
                     </thead>
                 </table>
 

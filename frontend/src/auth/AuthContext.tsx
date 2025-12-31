@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { API_BASE_URL } from '../config/api';
-
+import { API_BASE_URL } from '@/config/api';
+import logo from '@/assets/logo.png'
+ 
 interface User {
     id: string;
     email: string;
@@ -70,7 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return (
         <div className="flex bg-white justify-center items-center min-h-screen w-full space-x-2 animate-pulse">
             <div className="flex flex-row h-50 w-50 ">
-                <img src="./src/assets/logo.png" className="h-full object-contain">
+                <img src={ logo } className="h-full object-contain">
                 </img>
             </div>
             <div className="flex flex-col text-left text-slate-600">

@@ -11,8 +11,15 @@ from contextlib import contextmanager
 from dotenv import load_dotenv
 import os
 
-# Load .env file
-load_dotenv()
+# Check the "master" environment variable (set via 'export' or terminal)
+env_state = os.getenv("ENV", "development")
+
+if env_state == "production":
+    load_dotenv(".env.production")
+else:
+    load_dotenv(".env.development")
+
+print(f"--- Currently running in {env_state} mode ---")
 
 class Database:
     """

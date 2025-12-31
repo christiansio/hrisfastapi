@@ -1,3 +1,4 @@
+name: hris
 
 services:
   # PostgreSQL Database Service
@@ -6,25 +7,40 @@ services:
     container_name: app_postgres
     environment:
       # PostgreSQL configuration
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: hris
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       # Persist database data in a named volume
       - postgres_data:/var/lib/postgresql/data
       # Initialize database with custom script
       - ./db:/docker-entrypoint-initdb.d
-    ports:
-      # Restrict PostgreSQL in Docker
-      - "127.0.0.1:5432:5432"
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - app_network
+
+  nginx:
+    build:
+        context: ./frontend
+        dockerfile: Dockerfile.nginx
+    container_name: app_proxy
+    ports:
+      - "80:80" 
+      # - "443:443"  # Add this when you set up SSL
+    volumes:
+      # Map your local config file into the container
+      - ./nginx/hris.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+    networks:
+      - app_network
+    restart: unless-stopped
+
 
   # FastAPI Backend Service
   backend:
@@ -35,37 +51,25 @@ services:
     environment:
       # Database connection string
       # Format: postgresql://user:password@host:port/database
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: hris
-      DB_USER: postgres
-      DB_PASS: 1234
-    ports:
-      # Map container port 8000 to host port 8000
-      - "8000:8000"
+      - ENV=production
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+    expose:
+      - "8000"  # Expose to internal network only
     depends_on:
       db:
         condition: service_healthy
     networks:
       - app_network
-    restart: unless-stopped
-
-  # React Frontend Service
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: app_frontend
-    environment:
-      # Backend API URL for frontend to connect to backend
-      VITE_API_URL: http://localhost:8000
-    ports:
-      # Map container port 5173 to host port 5173
-      - "5173:5173"
-    depends_on:
-      - backend
-    networks:
-      - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/test-db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s # Give the DB time to wake up first
     restart: unless-stopped
 
 # Named volume for PostgreSQL data persistence

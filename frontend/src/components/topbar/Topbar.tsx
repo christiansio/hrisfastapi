@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChevronDown, User, Bell, BellDot } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Menu, MenuButton, MenuItems, MenuItem, Transition } from '@headlessui/react';
@@ -42,11 +42,6 @@ const NotificationIcon = ({ hasNotif } : { hasNotif : boolean}) => (
     </div>
     
 );
-
-const LogoutButton = () => {
-    const { logout } = useAuth();
-    const navigate = useNavigate();
-}
 
 
 const Topbar: React.FC = () => {

@@ -3,11 +3,14 @@ import { LoaderCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
 import { motion, AnimatePresence } from "framer-motion";
+
+import logo from '@/assets/logo.png';
+import loginImg from '@/assets/loginImg.png';
  
 const Login: React.FC = () => {
 
     // State to hold input values
-    const { login, logout, user } = useAuth();
+    const { login } = useAuth();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -42,7 +45,7 @@ const Login: React.FC = () => {
                             initial={{ opacity:0, x:-10 }}
                             animate={{ opacity:1, x:0 }}
                             transition={{ type: "spring", duration: 1}}
-                            src="./src/assets/logo.png" className="h-full object-contain"></motion.img>
+                            src={ logo } className="h-full object-contain"></motion.img>
                         </AnimatePresence>
                         <div className="flex justify-center items-center">
                             <span className="text-sm font-bold">Information System</span>
@@ -96,7 +99,7 @@ const Login: React.FC = () => {
                 transition={{ duration:1}}
                 className="flex basis-[52vw] h-[100vh] justify-center items-center p-5">
                     <section className="h-full w-full rounded-xl overflow-hidden flex justify-center items-center ">
-                        <img src="../src/assets/loginImg.png" className="w-full h-full object-cover"></img>
+                        <img src={ loginImg } className="w-full h-full object-cover"></img>
                     </section>
                 </motion.div>
                 </AnimatePresence>

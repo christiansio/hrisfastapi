@@ -7,7 +7,7 @@ coordinates all routers and configuration.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-import uvicorn
+import os
 
 # Import the lifespan manager from Database.py
 from Database import Database
@@ -42,7 +42,7 @@ app = FastAPI(
 )
 
 # Your frontend URL
-origins = ["http://localhost:5173","http://8.212.177.238:5173"]
+origins =  os.getenv("CORS_ORIGINS", "").split(",")
 
 # Configure CORS middleware (moved from AuthController.py)
 app.add_middleware(
@@ -79,16 +79,6 @@ async def test_database():
         # Use the context manager to automatically handle connection and cursor
         with Database.get_cursor() as cursor:
             cursor.execute("SELECT version();")
-            version = cursor.fetchone()
-            return{"status": "success", "database_version":version[0]}
+            return{"status": "success"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
-
-# Run the application (development only)
-if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",  # Reference to this file's app object
-        host="0.0.0.0",
-        port=8000,
-        reload=True  # Auto-reload on code changes during development
-    )
