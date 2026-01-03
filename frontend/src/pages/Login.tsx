@@ -7,7 +7,13 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import logo from '@/assets/logo.png';
 import loginImg from '@/assets/loginImg.png';
- 
+
+/**
+ * The login page component.
+ * It provides a form for users to enter their email and password to authenticate.
+ *
+ * @returns {JSX.Element} The rendered login page.
+ */
 const Login: React.FC = () => {
     // State to hold input values
     const { login } = useAuth();
@@ -21,6 +27,15 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
+    /**
+     * Handles the form submission for logging in.
+     * It prevents the default form action, sets the loading state,
+     * calls the login function from AuthContext, and navigates the user on success.
+     *
+     * @param {React.FormEvent} e - The form submission event.
+     * @async
+     * @returns {Promise<void>}
+     */
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
         setLoading(true);

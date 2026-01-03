@@ -5,7 +5,14 @@ import { useAuth } from '@/auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Menu, MenuButton, MenuItems, MenuItem, Transition } from '@headlessui/react';
 
-
+/**
+ * A component that displays a notification bell icon.
+ * It shows a dot and a ping animation if there are new notifications.
+ *
+ * @param {{ hasNotif: boolean }} props - The component props.
+ * @param {boolean} props.hasNotif - A boolean indicating if there are new notifications.
+ * @returns {JSX.Element} The rendered notification icon.
+ */
 const NotificationIcon = ({ hasNotif } : { hasNotif : boolean}) => (
 
     <div className="flex-none relative btn-bg-white">
@@ -43,7 +50,12 @@ const NotificationIcon = ({ hasNotif } : { hasNotif : boolean}) => (
     
 );
 
-
+/**
+ * The top navigation bar component of the application.
+ * It displays user information, a notification icon, and a dropdown menu with a logout option.
+ *
+ * @returns {JSX.Element} The rendered top bar.
+ */
 const Topbar: React.FC = () => {
     const [hasNotif, setHasNotif] = useState(true);
 
@@ -56,6 +68,12 @@ const Topbar: React.FC = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
+    /**
+     * Handles the user logout process.
+     * It calls the logout function from the AuthContext and then navigates the user to the login page.
+     * @async
+     * @returns {Promise<void>}
+     */
     const handleLogout = async () => {
         try {
             await logout();

@@ -61,7 +61,13 @@ app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 # You can add a root endpoint here if needed
 @app.get("/")
 async def root():
-    return {"message": "FastAPI with PostgreSQL"}
+    """
+    Purpose: Provides a basic root endpoint for the API.
+    Input:
+        - None.
+    Output:
+        - A dictionary with a "message" key, indicating the API is running (e.g., {"message": "FastAPI with PostgreSQL"}).
+    """
 
 # Health check endpoint
 @app.get("/health")

@@ -1,6 +1,13 @@
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, NotepadText, Settings } from 'lucide-react';
 
+/**
+ * The main sidebar navigation component for the application.
+ * It provides navigation links to the primary sections of the app, such as the Dashboard and Requests page.
+ * It uses NavLink to highlight the currently active route.
+ *
+ * @returns {JSX.Element} The rendered sidebar component.
+ */
 function Sidebar() {
 
   return (

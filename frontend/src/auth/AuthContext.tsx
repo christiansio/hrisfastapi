@@ -23,6 +23,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [isLoading, setIsLoading] = useState(true) // Track Initial Check
 
     useEffect(() => {
+        /**
+         * Verifies the user's session with the backend.
+         * It sends a request to the `/auth/me` endpoint to check for a valid session cookie.
+         * If the session is valid, the user state is restored.
+         * If not, the user state is cleared.
+         * @async
+         * @returns {Promise<void>}
+         */
         const verifySession = async () => {
             try {
                 const res = await fetch(`${API_BASE_URL}/auth/me`, {
@@ -82,6 +90,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         )
     };
     
+    /**
+     * Logs the user in by sending their credentials to the backend.
+     * @param {string} email - The user's email address.
+     * @param {string} password - The user's password.
+     * @returns {Promise<User>} The user object if login is successful.
+     * @throws {Error} If login fails due to incorrect credentials or a server error.
+     */
     const login = async (email: string, password: string): Promise<User> => {
         const res = await fetch(`${API_BASE_URL}/auth/login`, {
             method: "POST",
@@ -100,6 +115,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return data.user;
     };
 
+    /**
+     * Logs the user out by sending a request to the backend and clearing local state.
+     * @returns {Promise<string>} A confirmation message from the server.
+     */
     const logout = async (): Promise<string> => {
         try {
             const res = await fetch(`${API_BASE_URL}/auth/logout`, {
@@ -141,6 +160,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 };
 
+/**
+ * Custom hook to access the authentication context.
+ * Provides an easy way to get user data, authentication status, and login/logout functions.
+ * @throws {Error} If used outside of an `AuthProvider`.
+ * @returns {AuthContextType} The authentication context object.
+ */
 export const useAuth = () => {
     const ctx = useContext(AuthContext);
     if (!ctx) throw new Error("useAuth must be used inside AuthProvider");

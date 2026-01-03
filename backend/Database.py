@@ -31,9 +31,15 @@ class Database:
     @classmethod
     def get_pool(cls):
         """
-        Initializes and returns the psycopg2 SimpleConnectionPool.
+        Purpose: Initializes and returns the psycopg2 SimpleConnectionPool.
+        Initializes the connection pool if it hasn't been created yet.
         Uses environment variables for connection parameters.
-        Raises an exception if the initial connection fails.
+        Input:
+            - cls: The class itself.
+        Output:
+            - A psycopg2.pool.SimpleConnectionPool instance.
+        Raises:
+            - Exception: If the initial connection to the database fails.
         """
         if cls._connection_pool is None:
             try:
@@ -55,8 +61,12 @@ class Database:
     @contextmanager
     def get_connection(cls):
         """
-        A context manager that retrieves a connection from the pool,
-        yields it for use, and ensures it is returned to the pool afterwards.
+        Purpose: Provides a context manager that retrieves a connection from the pool.
+        This ensures the connection is yielded for use and returned to the pool afterwards.
+        Input:
+            - cls: The class itself.
+        Output:
+            - Yields an active psycopg2 database connection.
         """
         pool = cls.get_pool()
         conn = pool.getconn()
@@ -90,8 +100,12 @@ class Database:
     @classmethod
     def close_pool(cls):
         """
-        Closes all connections in the pool.
-        This should be called during application shutdown.
+        Purpose: Closes all connections in the pool.
+        This method should be called during application shutdown to release database resources.
+        Input:
+            - cls: The class itself.
+        Output:
+            - None.
         """
         if cls._connection_pool:
             cls._connection_pool.closeall()

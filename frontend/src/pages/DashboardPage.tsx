@@ -5,16 +5,29 @@ import { motion, AnimatePresence } from "framer-motion";
 import {CircleQuestionMark, MoveUpRightIcon, CircleCheckBigIcon, CircleSlash2, LogIn, LogOut } from 'lucide-react';
 
 
-
+/**
+ * A component that displays the user's clock-in/clock-out status and provides buttons to change it.
+ * It includes a confirmation modal for clocking in and out.
+ *
+ * @param {{ isClockedIn: boolean, onToggle: () => void }} props - The component props.
+ * @param {boolean} props.isClockedIn - A boolean indicating if the user is currently clocked in.
+ * @param {() => void} props.onToggle - A callback function to toggle the clock-in status.
+ * @returns {JSX.Element} The rendered clock-in status component.
+ */
 const ClockedInStatus = ( { isClockedIn, onToggle } : { isClockedIn : boolean, onToggle: () => void } ) => {
 
     const clockInOutModal = useRef<HTMLDialogElement>(null);
     
-
+    /**
+     * Opens the confirmation modal.
+     */
     const openModal = () => {
         
         clockInOutModal.current?.showModal();
     } 
+    /**
+     * Closes the confirmation modal.
+     */
     const closeModal = () => {
         
         clockInOutModal.current?.close();
@@ -29,7 +42,10 @@ const ClockedInStatus = ( { isClockedIn, onToggle } : { isClockedIn : boolean, o
             title: "Confirm Clock-In",
             message: "Ready to start your work day?",
         }
-
+    /**
+     * Handles the confirmation of the clock-in/out action.
+     * It calls the onToggle callback and closes the modal.
+     */
     const handleConfirm = () => {
         onToggle(); // Changes Status
         closeModal();
@@ -131,10 +147,20 @@ const dashBoardBadges = {
     )
 }
 
+/**
+ * The main component for the dashboard page.
+ * It displays various metrics and information related to the user's HR data,
+ * such as attendance, leave credits, and recent logs.
+ *
+ * @returns {JSX.Element} The rendered dashboard section.
+ */
 const DashboardSection: React.FC = () => {
 
     const [isClockedIn, setIsClockedIn] = useState(false);
         
+    /**
+     * Toggles the user's clock-in status.
+     */
     const handleToggleClock = () => {
         setIsClockedIn(!isClockedIn);
         

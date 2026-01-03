@@ -1,7 +1,12 @@
 import React from 'react';
 import { ChevronDown, User, Check, X } from 'lucide-react';
 
-
+/**
+ * The main component for the Requests & Approvals page.
+ * It provides a UI for users to view their own leave requests and for approvers to manage pending requests.
+ *
+ * @returns {JSX.Element} The rendered requests page component.
+ */
 const RequestsHeader: React.FC = () => {
 
     return (

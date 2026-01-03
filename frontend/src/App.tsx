@@ -8,6 +8,12 @@ import Login from "@/pages/Login";
 import AuthRedirectRoute from '@/auth/AuthRedirectRoute';
 import './App.css'
 
+/**
+ * The main application component that sets up the routing structure.
+ * It uses React Router to define public and protected routes.
+ * 
+ * @returns {JSX.Element} The rendered application with all its routes.
+ */
 const App = () => {
   return (
     <AuthProvider>

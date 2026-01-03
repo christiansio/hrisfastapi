@@ -4,11 +4,26 @@ import psycopg2
 from Database import Database  # Your existing helper
 
 def hash_password(password: str) -> str:
+    """
+    Purpose: Hashes a plaintext password using bcrypt.
+    Input:
+        - password (str): The plaintext password string to be hashed.
+    Output:
+        - str: The bcrypt hashed password string.
+    """
     password_bytes = password.encode('utf-8')
     salt = bcrypt.gensalt()
     return bcrypt.hashpw(password_bytes, salt).decode('utf-8')
 
 def seed_admin():
+    """
+    Purpose: Seeds the database with a default administrator user.
+    If an admin user with the specified email already exists, no changes are made.
+    Input:
+        - None.
+    Output:
+        - None. Prints messages to the console indicating the seeding process status (created, exists, or error).
+    """
     admin_email = "admin@hris.com"
     admin_raw_password = "AdminPassword123"
     admin_role = "admin"
