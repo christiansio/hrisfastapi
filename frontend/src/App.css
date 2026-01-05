@@ -65,3 +65,7 @@
 .dash-tr {
   @apply border-b border-slate-300/40 hover:bg-slate-200/10
 }
+
+.table-filter-1 {
+  @apply text-center text-slate-400/80 font-medium bg-slate-200/40 px-3 py-1 hover:text-slate-600/80 focus:font-medium focus:text-white focus:border-[#f05a28] focus:rounded-md focus:bg-[#f05a28] focus:scale-105 focus:shadow-lg cursor-pointer transition-all duration-105
+}
