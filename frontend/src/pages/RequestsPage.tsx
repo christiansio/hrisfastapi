@@ -34,16 +34,27 @@ const RequestsHeader: React.FC = () => {
                     <div className="flex card-header pb-4">
                         Approvals
                     </div>
-                    <div className="flex flex-col h-full w-full space-y-2 rounded-md" >
+
+                    <div className="flex flex-col h-full w-full space-y-2 rounded-lg" >
                         <div className="flex flex-row justify-between">
-                            <div className="grid grid-cols-2 gap-1">
-                                <button className="col-span-1 text-center border border-slate-400/60 text-slate-400 p-2 hover:text-[#f05a28] hover:border-[#f05a28] focus:text-white focus:bg-[#f05a28]/90 focus:border-[#f05a28]/90 focus:shadow-lg cursor-pointer transition-all duration-105 rounded-lg ">
-                                    Pending
-                                </button>
-                                <button className="col-span-1 text-center border border-slate-400/60 text-slate-400 p-2 hover:text-[#f05a28] hover:border-[#f05a28] focus:text-white focus:bg-[#f05a28]/90 focus:border-[#f05a28]/90 focus:shadow-lg cursor-pointer transition-all duration-105 rounded-lg ">
-                                    History
-                                </button>
+                            <div className="bg-orange-100/80 p-1 rounded-lg">
+                                <div className="grid grid-cols-4 gap-1">
+                                    <button className="col-span-1 text-center font-bold text-slate-400 px-2 py-1 hover:text-slate-600/80 focus:text-slate-600 focus:bg-white focus:border-slate-600 focus:shadow-lg cursor-pointer transition-all duration-105 rounded-lg ">
+                                        Pending
+                                    </button>
+                                    <button className="col-span-1 text-center font-bold text-slate-400 px-2 py-1 hover:text-slate-600/80 focus:text-slate-600 focus:bg-white focus:border-slate-600 focus:shadow-lg cursor-pointer transition-all duration-105 rounded-lg ">
+                                        Approved
+                                    </button>
+                                    <button className="col-span-1 text-center font-bold text-slate-400 px-2 py-1 hover:text-slate-600/80 focus:text-slate-600 focus:bg-white focus:border-slate-600 focus:shadow-lg cursor-pointer transition-all duration-105 rounded-lg ">
+                                        Rejected
+                                    </button>
+                                    <button className="col-span-1 text-center font-bold text-slate-400 px-2 py-1 hover:text-slate-600/80 focus:text-slate-600 focus:bg-white focus:border-slate-600 focus:shadow-lg cursor-pointer transition-all duration-105 rounded-lg ">
+                                        All
+                                    </button>
+                                </div>
+
                             </div>
+                            
 
                             <div className="flex flex-row">
                                 
