@@ -260,7 +260,7 @@ const DashboardSection: React.FC = () => {
             <div className="card col-span-2 flex flex-col">
                 <div className="flex justify-between px-4 pt-4 object-fill ">
                     <div className="card-header" >Leave Credits</div>
-                    <button className="text-sm font-extralight text-[#f05a28] text-[12px] hover:text-orange-400/80 cursor-pointer">Request Leave</button>
+                    <button className="text-sm font-extralight text-[#f05a28] text-[12px] hover:text-orange-400/80 cursor-pointer">Apply Leave</button>
                 </div>
 
                 <div className="flex h-full p-4 rounded-md">

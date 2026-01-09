@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { API_BASE_URL } from '@/config/api';
 import logo from '@/assets/logo.png'
  
-interface User {
+export interface User {
     id: string;
     email: string;
     role: 'admin' | 'approver' | 'user';

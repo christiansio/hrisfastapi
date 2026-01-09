@@ -50,7 +50,7 @@
   }
 
   .section-header-tabs {
-    @apply text-sm text-slate-400 font-extralight h-full w-24 items-end hover:text-slate-600 focus:border-b-3 focus:text-[#f05a28] focus:font-bold transition-all duration-150 cursor-pointer
+    @apply text-sm text-slate-400 font-extralight h-full w-24 items-center cursor-pointer
   }
 }
 
@@ -68,4 +68,47 @@
 
 .table-filter-1 {
   @apply text-center text-slate-400/80 font-medium bg-slate-200/40 px-3 py-1 hover:text-slate-600/80 focus:font-medium focus:text-white focus:border-[#f05a28] focus:rounded-md focus:bg-[#f05a28] focus:scale-105 focus:shadow-lg cursor-pointer transition-all duration-105
+}
+
+.table-req-th {
+  @apply pl-8 py-2
+}
+
+.table-req-tr {
+  @apply flex items-center pl-9 py-2
+}
+
+.pagination {
+  @apply border border-slate-400 px-4 py-1 hover:border-[#f05a28] hover:text-[#f05a28] hover:shadow-md transition-all duration-105 cursor-pointer
+}
+
+.multi-toggle-buttons {
+  /* 1. Set position relative globally to enable z-index */
+  position: relative;
+
+  @apply grid place-content-center text-center text-slate-400/80 font-medium bg-slate-200/40 w-full h-10 cursor-pointer
+  /* 2. Use a slower transition for size/color, but instant for z-index */
+  transition-all ease-in-out duration-300;
+
+  /* 3. Inactive buttons sit at z-0 */
+  z-index: 0;
+}
+
+.multi-toggle-buttons:hover {
+  @apply text-slate-600/80;
+  /* Lift slightly on hover */
+  z-index: 5;
+}
+
+.multi-toggle-buttons:focus {
+  @apply font-medium text-white border-[#f05a28] rounded-md bg-[#f05a28] scale-105 shadow-lg;
+  /* 4. Lift highest on focus to cover neighbors during the scale-up */
+  z-index: 20;
+  outline: none;
+}
+
+
+
+.field-label {
+  @apply font-medium
 }
