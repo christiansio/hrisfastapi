@@ -1,4 +1,4 @@
-import { ChevronDown, User, Check, X, Search, Info } from 'lucide-react';
+import { ChevronDown, User, Check, X, Search } from 'lucide-react';
 import InfoTip from '@/components/infoTip';
 import { getRequestTypeContent, getDurationContent } from '@/helpers/infoTipHelpers';
 
@@ -12,7 +12,7 @@ const ApprovalsSection = () => {
 
                 <div className="flex flex-col h-full w-full space-y-2 rounded-lg" >
                     <div className="flex flex-row justify-between">
-                        
+
                         <div className="flex flex-row gap-2">
                             <div className="flex">
                                 <div className="grid grid-cols-4">
@@ -30,7 +30,7 @@ const ApprovalsSection = () => {
                                     </button>
                                 </div>
                             </div>
-                            
+
                             <div className="flex">
                                 <button className="flex flex-row  text-slate-400 font-medium hover:text-slate-600 cursor-pointer transition-all duration-105 place-items-center pl-4 pr-2 rounded-md">
                                     <span >All Types</span>
@@ -43,15 +43,15 @@ const ApprovalsSection = () => {
                                 </button>
                             </div>
 
-                            
+
                         </div>
-                        
+
 
                         <div className="flex flex-row">
                             <input type="text" placeholder="Enter Request ID..." className="border border-gray-200 w-42 focus:outline-none transition-colors duration-150 focus:ring-0 focus:border-[#f05a28] rounded-l-md p-2">
                             </input>
                             <button className="bg-[#f05a28] font-medium text-white px-2 rounded-r-md hover:bg-orange-500/80 transition-all duration-100 shadow-md cursor-pointer">
-                                <Search className="flex items-center m-1"/>
+                                <Search className="flex items-center m-1" />
                             </button>
                         </div>
 
@@ -78,12 +78,12 @@ const ApprovalsSection = () => {
                                 Actions
                             </span >
                         </div>
-                        
+
                         <div className="grid-rows-5 divide-y divide-slate-200/60">
 
                             <div className="grid rows-span-1 grid-cols-6 hover:bg-slate-100/30">
                                 <div className="col-span-1 table-req-tr flex-row gap-3 px-2 py-2">
-                                    <User className="flex border h-10 w-10 border-slate-600 rounded-full"/>
+                                    <User className="flex border h-10 w-10 border-slate-600 rounded-full" />
                                     <span className="flex">Alice Johnson</span>
                                 </div>
                                 <div className="col-span-1 table-req-tr">
@@ -101,35 +101,35 @@ const ApprovalsSection = () => {
                                 </div>
                                 <div className="col-span-1 flex items-center gap-2 justify-center">
                                     <button className="flex p-2 bg-slate-100 hover:text-blue-600 hover:bg-blue-100 cursor-pointer rounded-xl">
-                                        <Check className=""/>
+                                        <Check className="" />
                                     </button>
                                     <button className="flex p-2 bg-slate-100 hover:text-red-600 hover:bg-red-100 cursor-pointer rounded-xl">
-                                        <X className=""/>
+                                        <X className="" />
                                     </button>
                                 </div>
                             </div>
 
                             <div className="grid rows-span-1 grid-cols-6 hover:bg-slate-100/30">
                                 <div className="col-span-1 table-req-tr flex-row gap-3 px-2 py-2">
-                                    <User className="flex border h-10 w-10 border-slate-600 rounded-full"/>
+                                    <User className="flex border h-10 w-10 border-slate-600 rounded-full" />
                                     <span className="flex">Alice Johnson</span>
                                 </div>
                                 <div className="col-span-1 table-req-tr">
                                     <span className="flex text-[12px] font-bold text-slate-600/60 bg-slate-200/40 px-3 border border-slate-200/80 rounded-full">REQ-20260102-0047</span>
                                 </div>
-                                
+
                                 <div className="col-span-1 table-req-tr">
                                     <InfoTip
                                         trigger={<span className="flex font-bold border-b border-dotted border-slate-400 hover:text-slate-700 hover:border-slate-700">Vacation</span>}
-                                        content={ getRequestTypeContent("vacation") }
-                                    /> 
-                                </div> 
-                                
+                                        content={getRequestTypeContent("vacation")}
+                                    />
+                                </div>
+
                                 <div className="col-span-1 table-req-tr">
                                     <InfoTip
                                         trigger={<span className="border-b border-dotted border-slate-400 hover:text-slate-700 hover:border-slate-700">Oct 10 - Oct 12, 2025</span>}
-                                        content={ getDurationContent("vacation")}
-                                        
+                                        content={getDurationContent("vacation")}
+
                                     />
                                 </div>
 
@@ -138,10 +138,10 @@ const ApprovalsSection = () => {
                                 </div>
                                 <div className="col-span-1 flex items-center gap-2 justify-center">
                                     <button className="flex p-2 bg-slate-100 hover:text-blue-600 hover:bg-blue-100 cursor-pointer rounded-xl">
-                                        <Check className=""/>
+                                        <Check className="" />
                                     </button>
                                     <button className="flex p-2 bg-slate-100 hover:text-red-600 hover:bg-red-100 cursor-pointer rounded-xl">
-                                        <X className=""/>
+                                        <X className="" />
                                     </button>
                                 </div>
                             </div>
@@ -149,25 +149,25 @@ const ApprovalsSection = () => {
 
                             <div className="grid rows-span-1 grid-cols-6 hover:bg-slate-100/30">
                                 <div className="col-span-1 table-req-tr flex-row gap-3 px-2 py-2">
-                                    <User className="flex border h-10 w-10 border-slate-600 rounded-full"/>
+                                    <User className="flex border h-10 w-10 border-slate-600 rounded-full" />
                                     <span className="flex">Alice Johnson</span>
                                 </div>
                                 <div className="col-span-1 table-req-tr">
                                     <span className="flex text-[12px] font-bold text-slate-600/60 bg-slate-200/40 px-3 border border-slate-200/80 rounded-full">REQ-20260102-0048</span>
                                 </div>
-                                
+
                                 <div className="col-span-1 table-req-tr">
                                     <InfoTip
                                         trigger={<span className="font-bold border-b border-dotted border-slate-400 hover:text-slate-700 hover:border-slate-700">Overtime</span>}
-                                        content={ getRequestTypeContent("overtime") }
-                                    /> 
-                                </div> 
-                                
+                                        content={getRequestTypeContent("overtime")}
+                                    />
+                                </div>
+
                                 <div className="col-span-1 table-req-tr">
                                     <InfoTip
                                         trigger={<span className="border-b border-dotted border-slate-400 hover:text-slate-700 hover:border-slate-700">Oct 15, 2025</span>}
-                                        content={ getDurationContent("overtime")}
-                                        
+                                        content={getDurationContent("overtime")}
+
                                     />
                                 </div>
 
@@ -176,10 +176,10 @@ const ApprovalsSection = () => {
                                 </div>
                                 <div className="col-span-1 flex items-center gap-2 justify-center">
                                     <button className="flex p-2 bg-slate-100 hover:text-blue-600 hover:bg-blue-100 cursor-pointer rounded-xl">
-                                        <Check className=""/>
+                                        <Check className="" />
                                     </button>
                                     <button className="flex p-2 bg-slate-100 hover:text-red-600 hover:bg-red-100 cursor-pointer rounded-xl">
-                                        <X className=""/>
+                                        <X className="" />
                                     </button>
                                 </div>
                             </div>

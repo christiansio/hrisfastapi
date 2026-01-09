@@ -34,25 +34,25 @@ export const RequestsHeader = ({ active, onChange, user }: Props) => {
 
             <div className="flex">
                 <div className="flex flex-row items-center justify-center -mb-2 gap-4">
-                    {visibleSections.map((section, index) => {
+                    {visibleSections.map((section, _index) => {
                         const isActive = active === section.key;
 
                         return (
                             <React.Fragment key={section.key}>
                                 {/* 1. Insert Divider: Logic to place it before the 3rd item (index 2) */}
-                                
+
                                 {/* 2. The Interactive Tab Button */}
                                 <button
-                                onClick={() => onChange(section.key)}
-                                className={`flex section-header-tabs justify-center transition-all duration-200 ease-in-out
-                                    ${isActive 
-                                    ? "border-b-3 text-[#f05a28] font-bold" 
-                                    : "border-b-3 border-transparent text-sm text-slate-400 font-extralight hover:text-slate-600" 
-                                    } 
+                                    onClick={() => onChange(section.key)}
+                                    className={`flex section-header-tabs justify-center transition-all duration-200 ease-in-out
+                                    ${isActive
+                                            ? "border-b-3 text-[#f05a28] font-bold"
+                                            : "border-b-3 border-transparent text-sm text-slate-400 font-extralight hover:text-slate-600"
+                                        } 
                                     
                                 `}
                                 >
-                                {section.label}
+                                    {section.label}
                                 </button>
                                 {section.key === "assign-leave" && (
                                     <div className="flex border-l border-slate-400 mb-2 h-12 mx-2"></div>
